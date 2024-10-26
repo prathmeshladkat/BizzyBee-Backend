@@ -1,0 +1,31 @@
+app.get("/user", (req, res) => {
+  res.send({ firstname: " prathmesh", Lastname: "ladkat" });
+});
+
+/ab?c -> b is optional route can be run only by ac also
+
+/ab+c -> unlimited number of b can be added in between end should be single c only abbbbbbc.
+
+/ab*c -> we cam add any letters between b and c. abALSJGDDHc.
+
+/.*fly$/ -> this is regex function end should be fly starting can be anything.
+
+/.car/ -> in this regex car word should be come anywhere between path.
+
+------------------------***************--------------------------------------------
+
+app.get("/user/:userId/:name/:password", (req, res) => {
+  console.log(req.params);
+  res.send({ firstname: " prathmesh", Lastname: "ladkat" });
+});
+
+: -> represents dynamic 
+this comes unders request not under response 
+req.params gives us data we can then store it in database.
+
+
+const password = CS8aSruEaTdRsoT5
+
+const uri = mongodb+srv://PrathmeshLadkat:CS8aSruEaTdRsoT5@devtinder.yt2de.mongodb.net/
+
+Revise about :- middleware, mongoose model, model instance.
