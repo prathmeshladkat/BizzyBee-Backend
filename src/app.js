@@ -67,16 +67,31 @@ app.delete("/user", async (req, res) => {
 });
 
 //patch api
-app.patch("/user", async (req, res) => {
-  const userId = req.body.userId;
+app.patch("/user/:userId", async (req, res) => {
+  const userId = req.params?.userId;
   const data = req.body;
 
   try {
-    const user = await User.findByIdAndUpdate({ _id: userId }, data);
+    //api level validation done here
+    //taking data from body passig object keys over data if its present in allowed items then only update else throw error
+    const ALLOWED_UPDATES = ["about", "gender", "age", "skills"];
+    const isUpdateAllowed = Object.keys(data).every((k) =>
+      ALLOWED_UPDATES.includes(k)
+    );
+    if (!isUpdateAllowed) {
+      throw new Error("updates not allowed");
+    }
+    //to limit skills upto 10
+    if (data?.skills.length > 10) {
+      throw new Error("Skills cannot be more than 10");
+    }
+    const user = await User.findByIdAndUpdate({ _id: userId }, data, {
+      runValidators: true,
+    });
     console.log(user);
     res.send("user updated succesefully");
   } catch (err) {
-    res.status(400).send("something went wrong");
+    res.status(400).send("UPDATE FAILED:" + err.message);
   }
 });
 
