@@ -2,9 +2,60 @@ const express = require("express");
 const connectDB = require("./config/database");
 const app = express();
 const User = require("./models/user");
+const { validateSignUpData } = require("./utils/validation");
+const bcrypt = require("bcrypt");
 
 //this middleware read json data convert to javascript oject and put it in req.body
 app.use(express.json());
+
+//API for Signup
+app.post("/signup", async (req, res) => {
+  try {
+    //Validate the data
+    validateSignUpData(req);
+
+    const { firstName, lastName, emailId, password } = req.body;
+
+    //Encrypt the password
+    const passwordHash = await bcrypt.hash(password, 10);
+
+    //Creating a new instance of the User Model
+    const user = new User({
+      firstName,
+      lastName,
+      emailId,
+      password: passwordHash,
+    });
+
+    await user.save();
+    res.send("user added succesfully...");
+  } catch (err) {
+    res.status(400).send("Error saving the user:" + err.message);
+  }
+});
+
+//API for login
+app.post("/login", async (req, res) => {
+  try {
+    const { emailId, password } = req.body;
+
+    const user = await User.find({ emailId: emailId });
+    if (!user) {
+      throw new Error("Invalid Credentials");
+    }
+
+    //logic/syntax for comparing password
+    const isValidPassword = await bcrypt.compare(password, user.password);
+
+    if (isValidPassword) {
+      res.send("Login Successfull!!");
+    } else {
+      throw new Error("Invalid Credentials");
+    }
+  } catch (err) {
+    res.status(400).send("error:" + err.message);
+  }
+});
 
 //Get user by email id
 app.get("/user", async (req, res) => {
@@ -39,18 +90,6 @@ app.get("/feed", async (req, res) => {
     res.send(users);
   } catch (err) {
     res.status(404).send("something went wrong");
-  }
-});
-
-app.post("/signup", async (req, res) => {
-  //Creating a new instance of the User Model
-  const user = new User(req.body);
-
-  try {
-    await user.save();
-    res.send("user added succesfully...");
-  } catch (err) {
-    res.status(400).send("Error saving the user:" + err.message);
   }
 });
 
