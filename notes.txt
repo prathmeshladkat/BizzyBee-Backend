@@ -29,3 +29,5 @@ const password = CS8aSruEaTdRsoT5
 const uri = mongodb+srv://PrathmeshLadkat:CS8aSruEaTdRsoT5@devtinder.yt2de.mongodb.net/
 
 Revise about :- middleware, mongoose model, model instance.
+
+/login /profile where authenticaion by jwt is implemented 
