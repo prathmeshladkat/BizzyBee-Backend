@@ -1,8 +1,11 @@
+const dotenv = require("dotenv"); // Load .env variables
 const cookieParser = require("cookie-parser");
 const express = require("express");
 const connectDB = require("./config/database.js");
 const app = express();
 const cors = require("cors");
+
+dotenv.config();
 
 //this middleware read json data convert to javascript oject and put it in req.body
 app.use(
