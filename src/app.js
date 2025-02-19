@@ -10,7 +10,11 @@ dotenv.config();
 //this middleware read json data convert to javascript oject and put it in req.body
 app.use(
   cors({
-    origin: "http://localhost:5174",
+    origin: [
+      "http://localhost:5174",
+      "http://localhost:5173",
+      "http://13.49.223.147", // ✅ Add your EC2 frontend URL
+    ],
     credentials: true,
   })
 );
