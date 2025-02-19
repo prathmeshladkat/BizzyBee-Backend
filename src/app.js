@@ -10,7 +10,7 @@ dotenv.config();
 //this middleware read json data convert to javascript oject and put it in req.body
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "http://localhost:5174",
     credentials: true,
   })
 );
