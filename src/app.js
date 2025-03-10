@@ -4,6 +4,7 @@ const connectDB = require("./config/database.js");
 const app = express();
 const cors = require("cors");
 require("dotenv").config; // Load .env variables
+const http = require("http");
 
 //this middleware read json data convert to javascript oject and put it in req.body
 app.use(
@@ -23,16 +24,23 @@ const authRouter = require("./routes/auth");
 const profileRouter = require("./routes/profile");
 const requestRouter = require("./routes/request");
 const userRouter = require("./routes/user.js");
+const { Socket } = require("socket.io");
+const initializeSocket = require("./utils/socket.js");
+const chatRouter = require("./routes/chat.js");
 
 app.use("/", authRouter);
 app.use("/", profileRouter);
 app.use("/", requestRouter);
 app.use("/", userRouter);
+app.use("/", chatRouter);
+
+const server = http.createServer(app);
+initializeSocket(server);
 
 connectDB()
   .then(() => {
     console.log("Database connection established...");
-    app.listen(7777, () => {
+    server.listen(3333, () => {
       console.log("Server is successfully listening on port 7777...");
     });
   })
